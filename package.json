@@ -1,9 +1,17 @@
 {
   "name": "football-webpages-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "author": "@brrock",
+  "homepage": "https://github.com/brrock/fwp-api",
   "description": "TypeScript library for fetching football data from footballwebpages.co.uk",
   "type": "module",
   "main": "./dist/index.mjs",
+  "repository": {
+    "url": "git+https://github.com/brrock/fwp-api"  },
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
