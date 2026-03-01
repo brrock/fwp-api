@@ -1,0 +1,27 @@
+{
+  "name": "football-webpages-api",
+  "version": "1.0.0",
+  "description": "TypeScript library for fetching football data from footballwebpages.co.uk",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "test": "bun test"
+  },
+  "peerDependencies": {
+    "cheerio": "^1.2.0",
+    "parse5": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsdown": "^0.21.0-beta.2",
+    "typescript": "^5.0.0"
+  }
+}
