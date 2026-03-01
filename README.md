@@ -5,7 +5,7 @@ A TypeScript library for fetching football data from [footballwebpages.co.uk](ht
 ## Installation
 
 ```bash
-bun add football-webpages-api
+bun add football-webpages-api cheerio parse5
 ```
 
 ## Usage
