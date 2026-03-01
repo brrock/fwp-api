@@ -64,18 +64,30 @@ Get all live scores:
 const matches = await api.getVidiprinter();
 ```
 
-Get specific competitions:
+Get specific competitions by ID:
 
 ```typescript
 const matches = await api.getVidiprinter([1, 2]); // Premier League + Championship
 ```
 
-Get configuration (enabled competitions):
+Get specific competitions by name:
+
+```typescript
+const matches = await api.getVidiprinter(["premier-league", "championship"]);
+```
+
+Get specific competitions by mixed ID and name:
+
+```typescript
+const matches = await api.getVidiprinter(["premier-league", 2]);
+```
+
+Get configuration (all available competitions):
 
 ```typescript
 const config = await api.getVidiprinterConfig();
-console.log(config.enabledCompetitions);
-console.log(config.allCompetitions);
+console.log(config.enabledCompetitions); // IDs of enabled competitions
+console.log(config.allCompetitions);       // All 138 available competitions
 ```
 
 ### Head to Head

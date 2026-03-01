@@ -189,6 +189,11 @@ export const COMPETITIONS: Competition[] = [
 
 const competitionPathToId: Record<string, number> = COMPETITIONS.reduce((acc, c) => ({ ...acc, [c.path]: c.id }), {});
 
+function getCompetitionId(leaguePath: string): number {
+  if (/^\d+$/.test(leaguePath)) return parseInt(leaguePath, 10);
+  return competitionPathToId[leaguePath] ?? 0;
+}
+
 function getCompetition(leaguePath: string): Competition {
   const id = competitionPathToId[leaguePath] ?? 0;
   const comp = COMPETITIONS.find(c => c.path === leaguePath);
@@ -484,20 +489,28 @@ export class FootballWebPages {
     return { year, knockout };
   }
   
-  async getVidiprinter(competitionIds?: number[]): Promise<Match[]> {
-    let url = "/vidiprinter";
-    if (competitionIds?.length) {
-      url += `?competitions=${competitionIds.join(",")}`;
-    }
-    const html = await this.fetch(url);
-    let matches = extractVidiprinterMatches(html);
+  async getVidiprinter(competitionIds?: (number | string)[]): Promise<Match[]> {
+    let html: string;
     
     if (competitionIds?.length) {
-      const idSet = new Set(competitionIds);
-      matches = matches.filter(m => idSet.has(m.competition.id));
+      const ids: number[] = [];
+      for (const c of competitionIds) {
+        if (typeof c === "number") {
+          ids.push(c);
+        } else {
+          const id = getCompetitionId(c);
+          if (id) ids.push(id);
+        }
+      }
+      
+      html = await this.fetch(`/vidiprinter?competitions=${ids.join(",")}`);
+      const matches = extractVidiprinterMatches(html);
+      const idSet = new Set(ids);
+      return matches.filter(m => idSet.has(m.competition.id));
     }
     
-    return matches;
+    html = await this.fetch("/vidiprinter");
+    return extractVidiprinterMatches(html);
   }
   
   async getVidiprinterConfig(): Promise<VidiprinterConfig> {
