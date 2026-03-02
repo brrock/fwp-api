@@ -151,6 +151,7 @@ interface Match {
   awayTeam: Team;
   homeScore?: number;
   awayScore?: number;
+  path?: string;
   status: "SCHEDULED" | "LIVE" | "FINISHED" | "POSTPONED";
 }
 
