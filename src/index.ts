@@ -24,6 +24,7 @@ export type MatchStatus = "SCHEDULED" | "LIVE" | "HALF_TIME" | "FINISHED" | "POS
 
 export interface Match {
   id: number;
+  path?: string;
   date: string;
   time?: string;
   competition: Competition;
@@ -263,6 +264,7 @@ function extractMatches(html: string, competition: Competition): Match[] {
     const awayLink = $el.find("td.away-team a").first();
     const homeScoreEl = $el.find("td.home-score").first();
     const awayScoreEl = $el.find("td.away-score").first();
+    const path = "/" + ($el.attr("data-href") || "").replace(/^\//, "");
     
     let homeName = homeLink.text().trim();
     let awayName = awayLink.text().trim();
@@ -276,6 +278,7 @@ function extractMatches(html: string, competition: Competition): Match[] {
       
       matches.push({
         id: 0,
+        path,
         date: new Date().toISOString().split("T")[0],
         competition,
         homeTeam: { id: 0, name: homeName },
@@ -567,9 +570,13 @@ export class FootballWebPages {
     };
     
     const stats = extractMatchStats(html);
-    const attendance = parseInt($(".attendance").first().text().replace(/[^0-9]/g, ""), 10) || undefined;
-    const venue = $(".venue, .match-venue").first().text().trim() || undefined;
-    const referee = $(".referee").first().text().trim() || undefined;
+    const matchInfo = $(".row.match").first().text();
+    const attendanceMatch = matchInfo.match(/Attendance:\s*([0-9,]+)/);
+    const venueMatch = matchInfo.match(/Venue:\s*([^\n]+)/);
+    const refereeMatch = matchInfo.match(/Referee:\s*([^\n]+)/);
+    const attendance = attendanceMatch ? parseInt(attendanceMatch[1].replace(/,/g, ""), 10) : undefined;
+    const venue = venueMatch ? venueMatch[1].trim() : undefined;
+    const referee = refereeMatch ? refereeMatch[1].trim() : undefined;
     
     return { match, lineup, stats, attendance, venue, referee };
   }
