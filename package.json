@@ -1,6 +1,6 @@
 {
   "name": "football-webpages-api",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "license": "MIT",
   "files": [
     "dist"
@@ -11,7 +11,8 @@
   "type": "module",
   "main": "./dist/index.mjs",
   "repository": {
-    "url": "git+https://github.com/brrock/fwp-api"  },
+    "url": "git+https://github.com/brrock/fwp-api"
+  },
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {

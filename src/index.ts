@@ -213,6 +213,21 @@ function parseScore(text: string): { home: number; away: number } | null {
   return m ? { home: parseInt(m[1], 10), away: parseInt(m[2], 10) } : null;
 }
 
+function toKebabCase(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/&/g, "and")
+    .trim();
+}
+
+function getTeamLogoUrl(teamName: string): string {
+  const kebab = toKebabCase(teamName);
+  return `${BASE_URL}/graphics/teams/${kebab}.svg`;
+}
+
 function parseMatchStatus(text: string): MatchStatus {
   const t = text.toLowerCase();
   if (t.includes("live") || t.includes("1st half") || t.includes("2nd half")) return "LIVE";
@@ -234,6 +249,9 @@ function extractLeagueTable(html: string, competition: Competition): LeagueTable
     const pos = $el.find("td.position, th.position").first().text().trim();
     const teamLink = $el.find("td.team a").first();
     const teamName = teamLink.text().trim() || $el.find("td.team").first().text().trim();
+    const logoImg = $el.find("td img").first();
+    const logoSrc = logoImg.attr("src") || "";
+    const logo = logoSrc ? `${BASE_URL}/${logoSrc}` : undefined;
     const played = parseInt($el.find("td:nth-child(5)").text(), 10) || 0;
     const won = parseInt($el.find("td:nth-child(6)").text(), 10) || 0;
     const drawn = parseInt($el.find("td:nth-child(7)").text(), 10) || 0;
@@ -245,7 +263,7 @@ function extractLeagueTable(html: string, competition: Competition): LeagueTable
     if (teamName && !isNaN(pts)) {
       entries.push({
         position: parseInt(pos, 10) || entries.length + 1,
-        team: { id: 0, name: teamName },
+        team: { id: 0, name: teamName, logo },
         played, won, drawn, lost, goalsFor: gf, goalsAgainst: ga, goalDifference: gf - ga, points: pts
       });
     }
@@ -281,8 +299,8 @@ function extractMatches(html: string, competition: Competition): Match[] {
         path,
         date: new Date().toISOString().split("T")[0],
         competition,
-        homeTeam: { id: 0, name: homeName },
-        awayTeam: { id: 0, name: awayName },
+        homeTeam: { id: 0, name: homeName, logo: getTeamLogoUrl(homeName) },
+        awayTeam: { id: 0, name: awayName, logo: getTeamLogoUrl(awayName) },
         homeScore: isFinished ? homeScore : undefined,
         awayScore: isFinished ? awayScore : undefined,
         status: isFinished ? "FINISHED" : "SCHEDULED"
@@ -453,6 +471,12 @@ export class FootballWebPages {
   
   async getMatches(leaguePath: string): Promise<Match[]> {
     const html = await this.fetch(`/${leaguePath}`);
+    const competition = getCompetition(leaguePath);
+    return extractMatches(html, competition);
+  }
+
+  async getMatchesByMonth(leaguePath: string, month: string): Promise<Match[]> {
+    const html = await this.fetch(`/${leaguePath}/fixtures-results/${month.toLowerCase()}`);
     const competition = getCompetition(leaguePath);
     return extractMatches(html, competition);
   }

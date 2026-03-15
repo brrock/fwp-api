@@ -138,3 +138,35 @@ describe("Match Details", () => {
     expect(match.stats?.possession).toBeDefined();
   });
 });
+
+describe("Monthly Fixtures", () => {
+  test("getMatchesByMonth returns matches for Premier League", async () => {
+    const matches = await api.getMatchesByMonth("premier-league", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+
+  test("getMatchesByMonth returns matches for Championship", async () => {
+    const matches = await api.getMatchesByMonth("championship", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+
+  test("getMatchesByMonth returns matches for FA Cup", async () => {
+    const matches = await api.getMatchesByMonth("fa-cup", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+
+  test("getMatchesByMonth returns matches for Europa League", async () => {
+    const matches = await api.getMatchesByMonth("europa-league", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+
+  test("getMatchesByMonth returns matches for La Liga", async () => {
+    const matches = await api.getMatchesByMonth("spanish-la-liga", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+
+  test("getMatchesByMonth returns matches for Serie A", async () => {
+    const matches = await api.getMatchesByMonth("italian-serie-a", "march");
+    expect(matches.length).toBeGreaterThan(0);
+  });
+});
