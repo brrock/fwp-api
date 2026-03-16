@@ -252,13 +252,13 @@ function extractLeagueTable(html: string, competition: Competition): LeagueTable
     const logoImg = $el.find("td img").first();
     const logoSrc = logoImg.attr("src") || "";
     const logo = logoSrc ? `${BASE_URL}/${logoSrc}` : undefined;
-    const played = parseInt($el.find("td:nth-child(5)").text(), 10) || 0;
-    const won = parseInt($el.find("td:nth-child(6)").text(), 10) || 0;
-    const drawn = parseInt($el.find("td:nth-child(7)").text(), 10) || 0;
-    const lost = parseInt($el.find("td:nth-child(8)").text(), 10) || 0;
-    const gf = parseInt($el.find("td:nth-child(9)").text(), 10) || 0;
-    const ga = parseInt($el.find("td:nth-child(10)").text(), 10) || 0;
-    const pts = parseInt($el.find("td:nth-child(12)").text(), 10) || 0;
+    const played = parseInt($el.find("td:nth-child(4)").text(), 10) || 0;
+    const won = parseInt($el.find("td:nth-child(5)").text(), 10) || 0;
+    const drawn = parseInt($el.find("td:nth-child(6)").text(), 10) || 0;
+    const lost = parseInt($el.find("td:nth-child(7)").text(), 10) || 0;
+    const gf = parseInt($el.find("td:nth-child(8)").text(), 10) || 0;
+    const ga = parseInt($el.find("td:nth-child(9)").text(), 10) || 0;
+    const pts = parseInt($el.find("td:nth-child(11)").text(), 10) || 0;
     
     if (teamName && !isNaN(pts)) {
       entries.push({
